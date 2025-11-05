@@ -1,0 +1,46 @@
+import java.util.*;
+
+class Ad {
+    double revenue;
+    double size;
+
+    Ad(double revenue, double size) {
+        this.revenue = revenue;
+        this.size = size;
+    }
+}
+
+public class AdSelector {
+
+    public static double getMaxRevenue(Ad[] ads, double pageLimit) {
+        Arrays.sort(ads, (a, b) -> Double.compare(b.revenue / b.size, a.revenue / a.size));
+
+        double totalRevenue = 0.0;
+        double usedSpace = 0.0;
+
+        for (Ad ad : ads) {
+            if (usedSpace + ad.size <= pageLimit) {
+                usedSpace += ad.size;
+                totalRevenue += ad.revenue;
+            } else {
+                double remaining = pageLimit - usedSpace;
+                totalRevenue += ad.revenue * (remaining / ad.size);
+                break;
+            }
+        }
+
+        return totalRevenue;
+    }
+
+    public static void main(String[] args) {
+        Ad[] ads = {
+            new Ad(500, 10),
+            new Ad(300, 20),
+            new Ad(400, 30)
+        };
+        double pageLimit = 40;
+
+        double maxRevenue = getMaxRevenue(ads, pageLimit);
+        System.out.println("Maximum revenue from ads = ₹" + maxRevenue);
+    }
+}

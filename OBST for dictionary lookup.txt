@@ -1,0 +1,41 @@
+public class DictionaryOBST {
+
+    // Function to calculate minimum cost of Optimal BST
+    public static int optimalBST(int[] freq, int n) {
+        int[][] cost = new int[n][n];
+
+        // Cost for single keys
+        for (int i = 0; i < n; i++)
+            cost[i][i] = freq[i];
+
+        // L is chain length
+        for (int L = 2; L <= n; L++) {
+            for (int i = 0; i <= n - L; i++) {
+                int j = i + L - 1;
+                cost[i][j] = Integer.MAX_VALUE;
+
+                int sum = 0;
+                for (int k = i; k <= j; k++)
+                    sum += freq[k];
+
+                for (int r = i; r <= j; r++) {
+                    int c = ((r > i) ? cost[i][r - 1] : 0) +
+                            ((r < j) ? cost[r + 1][j] : 0) + sum;
+                    if (c < cost[i][j])
+                        cost[i][j] = c;
+                }
+            }
+        }
+
+        return cost[0][n - 1];
+    }
+
+    public static void main(String[] args) {
+        // Frequencies of words searched in the dictionary
+        int[] freq = {25, 10, 20, 5}; // e.g., "apple", "banana", "cat", "dog"
+        int n = freq.length;
+
+        int minCost = optimalBST(freq, n);
+        System.out.println("Minimum cost of Optimal BST for dictionary lookup: " + minCost);
+    }
+}
